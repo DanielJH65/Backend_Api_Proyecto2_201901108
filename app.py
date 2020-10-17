@@ -25,10 +25,10 @@ def crearUsuario():
     rol = datos['rol']
     nuevo_usuario = Usuario(nombre, apellido, usuario, contra, rol)
     global usuarios
-    for usuario in usuarios:
-        if usuario.nombre == nombre:
+    for usu in usuarios:
+        if usu.usuario == usuario:
             return jsonify({'mensaje' : 'Error, El usuario ya existe'}), status.HTTP_400_BAD_REQUEST
-    usuario.append(nuevo_usuario)
+    usuarios.append(nuevo_usuario)
     return jsonify({'mensaje' : 'Satisfactorio, El usuario se creo correctamente'})
 
 @app.route('/modificarUsuario', methods = ['POST'])
@@ -40,15 +40,15 @@ def modificarUsuario():
     usuario = datos['usuario']
     contra = datos['contra']
     global usuarios
-    for usuario in usuarios:
-        if usuario.usuario == usuario_actual:
-            for usuario2 in usuarios:
-                if usuario2.usuario == usuario:
+    for usu in usuarios:
+        if usu.usuario == usuario_actual:
+            for usu2 in usuarios:
+                if usu2.usuario == usuario:
                     return jsonify({'mensaje': 'Error, ya existe en la lista de usuarios el nuevo usuario, prueba otro'}), status.HTTP_400_BAD_REQUEST
-            usuario.nombre = nombre
-            usuario.apellido = apellido
-            usuario.usuario = usuario
-            usuario.contra = contra
+            usu.nombre = nombre
+            usu.apellido = apellido
+            usu.usuario = usuario
+            usu.contra = contra
             return jsonify({'mensaje': 'Satisfactorio, el usuario se modificó correctamente'})
     return jsonify({'mensaje': 'Error, el usuario no existe en la lista de usuarios'}), status.HTTP_400_BAD_REQUEST
 
@@ -57,20 +57,22 @@ def iniciarSesion():
     datos = request.get_json()
     usuario = datos['usuario']
     contra = datos['contra']
+    print(usuario + " " + contra)
     global usuarios
-    for usuario in usuarios:
-        if usuario.usuario == usuario and usuario.contra == contra:
+    for usu in usuarios:
+        print(usu.usuario+" "+usu.contra)
+        if usu.usuario == usuario and usu.contra == contra:
             return jsonify({'mensaje' : 'Usuario encontrado'})
-    return jsonify({'mensaje' : 'Error, El usuario no existe'}), status.HTTP_400_BAD_REQUEST
+    return jsonify({'mensaje' : 'Error, El usuario o contraseña son incorrectos'}), status.HTTP_400_BAD_REQUEST
 
 @app.route('/recuperarContra', methods = ['GET'])
 def recuperarContra():
     datos = request.get_json()
     usuario = datos['usuario']
     global usuarios
-    for usuario in usuarios:
-        if usuario.usuario == usuario:
-            return jsonify({'contra' : str(usuario.conrtra)})
+    for usu in usuarios:
+        if usu.usuario == usuario:
+            return jsonify({'contra' : str(usu.contra)})
     return jsonify({'mensaje' : 'Error, El usuario no existe'}), status.HTTP_400_BAD_REQUEST
 
 if __name__ == "__main__":
