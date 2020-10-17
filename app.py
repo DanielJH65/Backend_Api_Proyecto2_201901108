@@ -94,7 +94,7 @@ def agregarPelicula():
     return jsonify({'mensaje': 'Satisfactorio, la pelicula se agrego correctamente'})
 
 @app.route('/obtenerPeliculas', methods = ['GET'])
-def ontenerFunciones():
+def ontenerPeliculas():
     json_peliculas = []
     global peliculas
     for pelicula in peliculas:
@@ -142,6 +142,24 @@ def eliminarPelicula():
             return jsonify({'mensaje': 'Satisfactorio, la pelicula se eliminó correctamente'})
         i += 1
     return jsonify({'mensaje': 'Error, la pelicula no existe en la lista de peliculas'}), status.HTTP_400_BAD_REQUEST
+
+@app.route('/agregarFuncion', methods = ['POST'])
+def agregarFuncion():
+    datos = request.get_json()
+    nombre = datos['nombre']
+    horario = datos['horario']
+    nueva_funcion = Funcion(nombre, horario)
+    global funciones
+    funciones.append(nueva_funcion)
+    return jsonify({'mensaje': 'Satisfactorio, la función se agregó Correctamente'})
+
+@app.route('/obtenerFunciones', methods = ['GET'])
+def ontenerFunciones():
+    json_funciones = []
+    global funciones
+    for funcion in funciones:
+        json_funciones.append({'nombre': funcion.nombre, 'horario':funcion.horario, 'disponible': funcion.disponible()})
+    return jsonify(json_funciones)
 
 if __name__ == "__main__":
     app.run(debug = True, host = '0.0.0.0')
