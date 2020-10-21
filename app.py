@@ -31,7 +31,21 @@ def crearUsuario():
         if usu.usuario == usuario:
             return jsonify({'mensaje' : 'Error, El usuario ya existe'}), status.HTTP_400_BAD_REQUEST
     usuarios.append(nuevo_usuario)
-    return jsonify({'mensaje' : 'Satisfactorio, El usuario se creo correctamente'})
+    return jsonify({'mensaje' : 'Satisfactorio, El usuario se creo correctamente'}), status.HTTP_200_OK
+
+@app.route('/obtenerUsuarios', methods = ['GET'])
+def ontenerUsuarios():
+    json_usuarios = []
+    global usuarios
+    for contenido in usuarios:
+        json_usuarios.append({
+            'nombre': contenido.nombre, 
+            'apellido' : contenido.apellido, 
+            'usuario': contenido.usuario,
+            'contra' : contenido.contra,
+            'rol' : contenido.rol
+            })
+    return jsonify(json_usuarios)
 
 @app.route('/modificarUsuario', methods = ['POST'])
 def modificarUsuario():
