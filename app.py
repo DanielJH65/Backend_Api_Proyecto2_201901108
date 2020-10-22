@@ -80,11 +80,12 @@ def iniciarSesion():
             return jsonify({'mensaje' : 'Usuario encontrado'})
     return jsonify({'mensaje' : 'Error, El usuario o contraseña son incorrectos'}), status.HTTP_400_BAD_REQUEST
 
-@app.route('/recuperarContra', methods = ['GET'])
+@app.route('/recuperarContra', methods = ['POST'])
 def recuperarContra():
     datos = request.get_json()
     usuario = datos['usuario']
     global usuarios
+    print(usuario)
     for usu in usuarios:
         if usu.usuario == usuario:
             return jsonify({'contra' : str(usu.contra)})
