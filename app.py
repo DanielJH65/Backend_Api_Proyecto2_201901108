@@ -68,7 +68,7 @@ def modificarUsuario():
             return jsonify({'mensaje': 'Satisfactorio, el usuario se modificó correctamente'})
     return jsonify({'mensaje': 'Error, el usuario no existe en la lista de usuarios'}), status.HTTP_400_BAD_REQUEST
 
-@app.route('/iniciarSesion', methods = ['GET'])
+@app.route('/iniciarSesion', methods = ['POST'])
 def iniciarSesion():
     datos = request.get_json()
     usuario = datos['usuario']
@@ -76,7 +76,6 @@ def iniciarSesion():
     print(usuario + " " + contra)
     global usuarios
     for usu in usuarios:
-        print(usu.usuario+" "+usu.contra)
         if usu.usuario == usuario and usu.contra == contra:
             return jsonify({'mensaje' : 'Usuario encontrado'})
     return jsonify({'mensaje' : 'Error, El usuario o contraseña son incorrectos'}), status.HTTP_400_BAD_REQUEST
