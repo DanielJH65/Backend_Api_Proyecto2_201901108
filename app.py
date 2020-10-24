@@ -13,6 +13,8 @@ usuarios = []
 peliculas = []
 funciones = []
 
+usuarios.append(Usuario("Usuario","Maestro","ADMIN","admin","Administrador"))
+
 @app.route('/', methods = ['GET'])
 def inicio():
     return "<h1>Api Iniciada</h1>"
@@ -77,7 +79,7 @@ def iniciarSesion():
     global usuarios
     for usu in usuarios:
         if usu.usuario == usuario and usu.contra == contra:
-            return jsonify({'mensaje' : 'Usuario encontrado'})
+            return jsonify({'mensaje' : 'Usuario encontrado','rol':usu.rol,'usuario':usu.usuario})
     return jsonify({'mensaje' : 'Error, El usuario o contraseña son incorrectos'}), status.HTTP_400_BAD_REQUEST
 
 @app.route('/recuperarContra', methods = ['POST'])
