@@ -1,8 +1,9 @@
 import pytz
 import datetime
 class Funcion():
-    def __init__ (self, nombre, hora):
-        self.nombre = nombre
+    def __init__ (self, pelicula, sala, hora):
+        self.pelicula = pelicula
+        self.sala = sala
         self.hora = hora
         self.asistentes = []
 

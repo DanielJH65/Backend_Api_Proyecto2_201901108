@@ -162,9 +162,10 @@ def eliminarPelicula():
 @app.route('/agregarFuncion', methods = ['POST'])
 def agregarFuncion():
     datos = request.get_json()
-    nombre = datos['nombre']
-    horario = datos['horario']
-    nueva_funcion = Funcion(nombre, horario)
+    pelicula = datos['pelicula']
+    sala = datos['sala']
+    hora = datos['hora']
+    nueva_funcion = Funcion(pelicula, sala, hora)
     global funciones
     funciones.append(nueva_funcion)
     return jsonify({'mensaje': 'Satisfactorio, la función se agregó Correctamente'})
@@ -174,7 +175,7 @@ def ontenerFunciones():
     json_funciones = []
     global funciones
     for funcion in funciones:
-        json_funciones.append({'nombre': funcion.nombre, 'horario':funcion.horario, 'disponible': funcion.disponible()})
+        json_funciones.append({'pelicula': funcion.pelicula, 'sala': funcion.sala, 'hora':funcion.hora, 'disponible': funcion.disponible()})
     return jsonify(json_funciones)
 
 if __name__ == "__main__":
