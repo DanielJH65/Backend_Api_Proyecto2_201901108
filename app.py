@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 from flask_api import status
-import json, os
+import json
+import os
 from Usuario import Usuario
 from Pelicula import Pelicula
 from Funcion import Funcion
@@ -13,13 +14,16 @@ usuarios = []
 peliculas = []
 funciones = []
 
-usuarios.append(Usuario("Usuario","Maestro","ADMIN","admin","Administrador"))
+usuarios.append(Usuario("Usuario", "Maestro",
+                        "ADMIN", "admin", "Administrador"))
 
-@app.route('/', methods = ['GET'])
+
+@app.route('/', methods=['GET'])
 def inicio():
     return "<h1>Api Iniciada</h1>"
 
-@app.route('/crearUsuario', methods = ['POST'])
+
+@app.route('/crearUsuario', methods=['POST'])
 def crearUsuario():
     datos = request.get_json()
     nombre = datos['nombre']
@@ -31,25 +35,27 @@ def crearUsuario():
     global usuarios
     for usu in usuarios:
         if usu.usuario == usuario:
-            return jsonify({'mensaje' : 'Error, El usuario ya existe'}), status.HTTP_400_BAD_REQUEST
+            return jsonify({'mensaje': 'Error, El usuario ya existe'}), status.HTTP_400_BAD_REQUEST
     usuarios.append(nuevo_usuario)
-    return jsonify({'mensaje' : 'Satisfactorio, El usuario se creo correctamente'}), status.HTTP_200_OK
+    return jsonify({'mensaje': 'Satisfactorio, El usuario se creo correctamente'}), status.HTTP_200_OK
 
-@app.route('/obtenerUsuarios', methods = ['GET'])
+
+@app.route('/obtenerUsuarios', methods=['GET'])
 def ontenerUsuarios():
     json_usuarios = []
     global usuarios
     for contenido in usuarios:
         json_usuarios.append({
-            'nombre': contenido.nombre, 
-            'apellido' : contenido.apellido, 
+            'nombre': contenido.nombre,
+            'apellido': contenido.apellido,
             'usuario': contenido.usuario,
-            'contra' : contenido.contra,
-            'rol' : contenido.rol
-            })
+            'contra': contenido.contra,
+            'rol': contenido.rol
+        })
     return jsonify(json_usuarios)
 
-@app.route('/modificarUsuario', methods = ['POST'])
+
+@app.route('/modificarUsuario', methods=['POST'])
 def modificarUsuario():
     datos = request.get_json()
     usuario_actual = datos['usuario_actual']
@@ -70,7 +76,8 @@ def modificarUsuario():
             return jsonify({'mensaje': 'Satisfactorio, el usuario se modificó correctamente'})
     return jsonify({'mensaje': 'Error, el usuario no existe en la lista de usuarios'}), status.HTTP_400_BAD_REQUEST
 
-@app.route('/iniciarSesion', methods = ['POST'])
+
+@app.route('/iniciarSesion', methods=['POST'])
 def iniciarSesion():
     datos = request.get_json()
     usuario = datos['usuario']
@@ -79,10 +86,11 @@ def iniciarSesion():
     global usuarios
     for usu in usuarios:
         if usu.usuario == usuario and usu.contra == contra:
-            return jsonify({'mensaje' : 'Usuario encontrado','rol':usu.rol,'usuario':usu.usuario})
-    return jsonify({'mensaje' : 'Error, El usuario o contraseña son incorrectos'}), status.HTTP_400_BAD_REQUEST
+            return jsonify({'mensaje': 'Usuario encontrado', 'rol': usu.rol, 'usuario': usu.usuario})
+    return jsonify({'mensaje': 'Error, El usuario o contraseña son incorrectos'}), status.HTTP_400_BAD_REQUEST
 
-@app.route('/recuperarContra', methods = ['POST'])
+
+@app.route('/recuperarContra', methods=['POST'])
 def recuperarContra():
     datos = request.get_json()
     usuario = datos['usuario']
@@ -90,10 +98,11 @@ def recuperarContra():
     print(usuario)
     for usu in usuarios:
         if usu.usuario == usuario:
-            return jsonify({'contra' : str(usu.contra)})
-    return jsonify({'mensaje' : 'Error, El usuario no existe'}), status.HTTP_400_BAD_REQUEST
+            return jsonify({'contra': str(usu.contra)})
+    return jsonify({'mensaje': 'Error, El usuario no existe'}), status.HTTP_400_BAD_REQUEST
 
-@app.route('/agregarPelicula', methods = ['POST'])
+
+@app.route('/agregarPelicula', methods=['POST'])
 def agregarPelicula():
     datos = request.get_json()
     titulo = datos['titulo']
@@ -109,21 +118,24 @@ def agregarPelicula():
     peliculas.append(nueva_pelicula)
     return jsonify({'mensaje': 'Satisfactorio, la pelicula se agrego correctamente'})
 
-@app.route('/obtenerPeliculas', methods = ['GET'])
+
+@app.route('/obtenerPeliculas', methods=['GET'])
 def ontenerPeliculas():
     json_peliculas = []
     global peliculas
     for pelicula in peliculas:
         json_peliculas.append({
-            'titulo': pelicula.titulo, 
-            'url_imagen' : pelicula.url_imagen, 
+            'titulo': pelicula.titulo,
+            'url_imagen': pelicula.url_imagen,
             'puntuacion': pelicula.puntuacion,
-            'duracion' : pelicula.duracion,
-            'sinopsis' : pelicula.sinopsis
-            })
+            'duracion': pelicula.duracion,
+            'sinopsis': pelicula.sinopsis,
+            'resenas': pelicula.resenas
+        })
     return jsonify(json_peliculas)
 
-@app.route('/modificarPelicula', methods = ['POST'])
+
+@app.route('/modificarPelicula', methods=['POST'])
 def modificarPelicula():
     datos = request.get_json()
     titulo_actual = datos['titulo_actual']
@@ -146,7 +158,8 @@ def modificarPelicula():
             return jsonify({'mensaje': 'Satisfactorio, la pelicula se modificó correctamente'})
     return jsonify({'mensaje': 'Error, la pelicula no existe en la lista de peliculas'}), status.HTTP_400_BAD_REQUEST
 
-@app.route('/eliminarPelicula', methods = ['POST'])
+
+@app.route('/eliminarPelicula', methods=['POST'])
 def eliminarPelicula():
     datos = request.get_json()
     titulo = datos['titulo']
@@ -159,7 +172,8 @@ def eliminarPelicula():
         i += 1
     return jsonify({'mensaje': 'Error, la pelicula no existe en la lista de peliculas'}), status.HTTP_400_BAD_REQUEST
 
-@app.route('/agregarFuncion', methods = ['POST'])
+
+@app.route('/agregarFuncion', methods=['POST'])
 def agregarFuncion():
     datos = request.get_json()
     pelicula = datos['pelicula']
@@ -170,13 +184,59 @@ def agregarFuncion():
     funciones.append(nueva_funcion)
     return jsonify({'mensaje': 'Satisfactorio, la función se agregó Correctamente'})
 
-@app.route('/obtenerFunciones', methods = ['GET'])
+
+@app.route('/obtenerFunciones', methods=['GET'])
 def ontenerFunciones():
     json_funciones = []
     global funciones
     for funcion in funciones:
-        json_funciones.append({'pelicula': funcion.pelicula, 'sala': funcion.sala, 'hora':funcion.hora, 'disponible': funcion.disponible()})
+        json_funciones.append({'pelicula': funcion.pelicula, 'sala': funcion.sala,'hora': funcion.hora, 'disponible': funcion.disponible()})
     return jsonify(json_funciones)
 
+
+@app.route('/agregarResena', methods=['POST'])
+def agregarResena():
+    datos = request.get_json()
+    titulo = datos['titulo']
+    usuario = datos['usuario']
+    texto = datos['texto']
+    global peliculas
+    for pelicula in peliculas:
+        if pelicula.titulo == titulo:
+            pelicula.resenas.append({
+                "usuario": usuario,
+                "texto": texto
+            })
+    return jsonify({'mensaje': 'Satisfactorio, la reseña se agregó Correctamente'})
+
+
+@app.route('/cargaMasiva', methods=['POST'])
+def cargaMasiva():
+    datos = request.get_json()
+    contenido = datos['contenido']
+    filas = contenido.split("\r\n")
+    global peliculas
+    valido = False
+    for fila in filas:
+        if valido == False:
+            valido = True
+        else:
+            columnas = fila.split(",")
+            titulo = columnas[0]
+            url_imagen = columnas[1]
+            puntuacion = columnas[2]
+            duracion = columnas[3]
+            sinopsis = columnas[4]
+            nueva_pelicula = Pelicula(titulo, url_imagen, puntuacion, duracion, sinopsis)
+            print(titulo)
+            global peliculas
+            for pelicula in peliculas:
+                if pelicula.titulo == titulo:
+                    break
+            peliculas.append(nueva_pelicula)
+    print(peliculas)
+    return jsonify({'mensaje': 'Satisfactorio, las peliculas se agregarón correctamente'})
+
+
 if __name__ == "__main__":
-    app.run(debug = True, host = '0.0.0.0')
+    app.run(debug=True, host='0.0.0.0')

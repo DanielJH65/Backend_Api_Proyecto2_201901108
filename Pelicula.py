@@ -5,3 +5,4 @@ class Pelicula():
         self.puntuacion = puntuacion
         self.duracion = duracion
         self.sinopsis = sinopsis
+        self.resenas = []
