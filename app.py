@@ -14,8 +14,7 @@ usuarios = []
 peliculas = []
 funciones = []
 
-usuarios.append(Usuario("Usuario", "Maestro",
-                        "ADMIN", "admin", "Administrador"))
+usuarios.append(Usuario("Usuario", "Maestro", "ADMIN", "admin", "Administrador"))
 
 
 @app.route('/', methods=['GET'])
@@ -182,8 +181,11 @@ def agregarFuncion():
     pelicula = datos['pelicula']
     sala = datos['sala']
     hora = datos['hora']
-    nueva_funcion = Funcion(pelicula, sala, hora)
     global funciones
+    id = 1
+    for funcion in funciones:
+        id = funcion.id + 1
+    nueva_funcion = Funcion(id,pelicula, sala, hora)
     funciones.append(nueva_funcion)
     return jsonify({'mensaje': 'Satisfactorio, la función se agregó Correctamente'})
 
@@ -193,9 +195,36 @@ def ontenerFunciones():
     json_funciones = []
     global funciones
     for funcion in funciones:
-        json_funciones.append({'pelicula': funcion.pelicula, 'sala': funcion.sala,'hora': funcion.hora, 'disponible': funcion.disponible()})
+        json_funciones.append({
+            'id': funcion.id,
+            'pelicula': funcion.pelicula,
+            'sala': funcion.sala,'hora': funcion.hora, 
+            'disponible': funcion.disponible(), 
+            'asientos': funcion.asientos})
     return jsonify(json_funciones)
 
+@app.route('/eliminarFuncion', methods=['POST'])
+def eliminarFuncion():
+    datos = request.get_json()
+    id = int(datos['id'])
+    global funciones
+    i = 0
+    for funcion in funciones:
+        if funcion.id == id:
+            funciones.pop(i)
+            return jsonify({'mensaje': 'Satisfactorio, la funcion se eliminó correctamente'})
+        else:
+            i += 1
+    return jsonify({'mensaje': 'Error, la funcion no existe en la lista de funciones'}), status.HTTP_400_BAD_REQUEST
+
+@app.route('/obtenerUnaFuncion', methods=['GET'])
+def obtenerUnaFuncion():
+    id = int(request.args.get('nombre'))
+    global funciones
+    for funcion in funciones:
+        if funcion.id == id:
+            return jsonify(funcion.asientos)
+    return jsonify({"mensaje":"La función no existe"})
 
 @app.route('/agregarResena', methods=['POST'])
 def agregarResena():
