@@ -68,7 +68,10 @@ def modificarUsuario():
         if usu.usuario == usuario_actual:
             for usu2 in usuarios:
                 if usu2.usuario == usuario:
-                    return jsonify({'mensaje': 'Error, ya existe en la lista de usuarios el nuevo usuario, prueba otro'}), status.HTTP_400_BAD_REQUEST
+                    if usu2.usuario == usuario_actual:
+                        continue
+                    else:
+                        return jsonify({'mensaje': 'Error, ya existe en la lista de usuarios el nuevo usuario, prueba otro'}), status.HTTP_400_BAD_REQUEST
             usu.nombre = nombre
             usu.apellido = apellido
             usu.usuario = usuario
