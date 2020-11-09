@@ -23,6 +23,8 @@ class Funcion():
             tiempo_funcion = self.hora.split(":")
             hora_funcion = int(tiempo_funcion[0])
             min_funcion = int(tiempo_funcion[1])
+            if hora_actual == 0:
+                self.asientos = self.vacio()    
             if hora_actual > hora_funcion:
                 return "No Disponible"
             elif hora_actual == hora_funcion:
@@ -36,12 +38,13 @@ class Funcion():
     def vacio(self):
         sala = []
         for i in range(9):
-            sala.append({"identificador": i+1, "disponible": True})
+            sala.append({"identificador": i+1, "disponible": True, "usuario":""})
         return sala
 
-    def apartar(self, identificador):
+    def apartar(self, identificador,nombre):
         i = identificador - 1
         self.asientos[i]["disponible"] = False
+        self.asientos[i]["usuario"] = nombre
 
     def llena(self):
         for asiento in self.asientos:

@@ -198,7 +198,8 @@ def ontenerFunciones():
         json_funciones.append({
             'id': funcion.id,
             'pelicula': funcion.pelicula,
-            'sala': funcion.sala,'hora': funcion.hora, 
+            'sala': funcion.sala,
+            'hora': funcion.hora, 
             'disponible': funcion.disponible(), 
             'asientos': funcion.asientos})
     return jsonify(json_funciones)
@@ -219,12 +220,27 @@ def eliminarFuncion():
 
 @app.route('/obtenerUnaFuncion', methods=['GET'])
 def obtenerUnaFuncion():
-    id = int(request.args.get('nombre'))
+    datos = request.args.get('id')
+    id = int(datos)
     global funciones
     for funcion in funciones:
         if funcion.id == id:
-            return jsonify(funcion.asientos)
+            return jsonify({'pelicula':funcion.pelicula,'asientos':funcion.asientos})
     return jsonify({"mensaje":"La función no existe"})
+
+@app.route('/apartar', methods=['POST'])
+def apartar():
+    datos = request.get_json()
+    identificador = datos['identificador']
+    usuario = datos['usuario']
+    id = int(datos['id'])
+    print(id)
+    global funciones
+    for funcion in funciones:
+        if funcion.id == id:
+            funcion.apartar(identificador,usuario)
+            return jsonify({"mensaje":"Completo"})
+    return jsonify({"mensaje":"Error"}), status.HTTP_400_BAD_REQUEST
 
 @app.route('/agregarResena', methods=['POST'])
 def agregarResena():
